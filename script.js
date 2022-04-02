@@ -8,7 +8,7 @@ const choiceList =[
     ['4', '5', '6'],
     ['7', '8', '9']
 ]
-const numberOfQuestion = 3
+var numberOfQuestion = 3
 var score
 var timeLeft = 0
 var highscoreList = JSON.parse(localStorage.getItem('highscore'))||[]
@@ -166,7 +166,9 @@ function checkButtonClicked(event){
             timeLeft -= 10
             feedback.textContent = 'Wrong'
         }
+        // display feedback
         feedback.setAttribute('style', 'display:block;')
+        // timer to hide feedback
         var feedbackTimer = 1
         var showFeedback = setInterval(function(){
             feedbackTimer--
@@ -176,6 +178,8 @@ function checkButtonClicked(event){
                 feedback.textContent = ''
             }
         }, 700)
+
+        // go to new question
         pickAndDisplayQuestion()
     }
     if(target.matches('#startBtn')){
