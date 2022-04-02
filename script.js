@@ -3,7 +3,7 @@ const questionList =[]
 const answerList =[]
 const choiceList =[]
 var timeLeft = 0
-var highscoreList = localStorage.getItem('highscore')
+var highscoreList = JSON.parse(localStorage.getItem('highscore'))||[]
 var highscoreToggle = false
 
 // item selected in HTML DOM
@@ -31,15 +31,24 @@ function toggleHighscore(){
         scoreList.setAttribute('style', 'display: block;')
         scoreBtn.textContent = "Hide HighScore"
         highscoreToggle = true
-        // for (var i = 0; i < highscoreList.length; i++){
-            // var liEl = document.createElement('li')
-    
-        // }
+        highscoreList = []
+        highscoreList = JSON.parse(localStorage.getItem('highscore'))||[]
+        for (var i = 0; i < highscoreList.length; i++){
+            var liEl = document.createElement('li')
+            var liText = highscoreList[i].name + " - " + highscoreList[i].score + " point(s)."
+            liEl.textContent = liText
+            scoreList.appendChild(liEl)
+        }
     }
     else{
         scoreList.setAttribute('style', 'display: none;')
         scoreBtn.textContent = "Show HighScore"
         highscoreToggle = false
+        var childList = scoreList.children
+        for (var i = 0; i < childList.length; i){
+            childList[i].remove()
+            console.log(childList)
+        }
     }
     
 }
