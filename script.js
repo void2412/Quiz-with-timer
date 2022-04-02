@@ -1,19 +1,27 @@
 // initial variable and constant
-const questionList =[]
-const answerList =[]
-const choiceList =[]
+const questionList =['What is DOM', 'HTML stand for', 'css stand for', 'js stand for', 'What is jQuery']
+const answerList =['Document Object Model', 'Hypertext Markup Language', 'Casading stylesheet','javascript', 'javascript library']
+const choiceList =[
+    ['x', 'y', 'z'],
+    ['a', 'b', 'c'],
+    ['1', '2', '3'],
+    ['4', '5', '6'],
+    ['7', '8', '9']
+]
+const numberOfQuestion = 3
+var score
 var timeLeft = 0
 var highscoreList = JSON.parse(localStorage.getItem('highscore'))||[]
 var highscoreToggle = false
-
+var timer
+var index
+var askedQuestion = []
 // item selected in HTML DOM
 var scoreList = document.querySelector('#highscore')
 var scoreBtn = document.querySelector('#viewScore')
 
-var questionArea = document.querySelector('#questionArea')
 var question = document.querySelector('#question')
 
-var inputArea = document.querySelector('#inputArea')
 var btnArea = document.querySelector('#questionAnswer')
 var playerDetail = document.querySelector('#playerDetail')
 
@@ -21,10 +29,24 @@ var timerArea = document.querySelector('#timerArea')
 var timerText = document.querySelector('#timer')
 var penaltyText = document.querySelector('#penalty')
 
+
+
+// initialization
 function init(){
     scoreList.setAttribute('style', 'display:none;')
+    showMenu()
 }
 init()
+
+// utilities functions
+function removeAllChild(element){
+    for(var i = 0; i< element.children.length; i){
+        element.children[i].remove()
+    }
+}
+
+
+
 // rendering functions
 function toggleHighscore(){
     if (!highscoreToggle){
@@ -44,29 +66,77 @@ function toggleHighscore(){
         scoreList.setAttribute('style', 'display: none;')
         scoreBtn.textContent = "Show HighScore"
         highscoreToggle = false
-        var childList = scoreList.children
-        for (var i = 0; i < childList.length; i){
-            childList[i].remove()
-            console.log(childList)
-        }
+        removeAllChild(scoreList)
     }
     
 }
 
-function showQuestion(){
-
+function showQuestion(index){
+    removeAllChild(btnArea)
+    question.textContent = questionList[index]
 }
 
+function shuffleChoice(array){
+    var currentIndex = array.length
+    while(currentIndex > 0){
+        randomIndex = Math.floor(Math.random() * currentIndex)
+        currentIndex--
+
+        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]]
+    }
+    return array
+}
+
+function showMultipleChoice(index){
+    var choices = choiceList[index].slice(0, choiceList[index].length)
+    choices.push(answerList[index])
+    choices = shuffleChoice(choices)
+    for (var i = 0; i < choices.length; i++)
+    {
+        buttonElement = document.createElement('button')
+        buttonElement.setAttribute('class', 'choice')
+        buttonElement.textContent = choices[i]
+        btnArea.appendChild(buttonElement)
+    }
+}
+
+function pickAndDisplayQuestion(){
+    removeAllChild(btnArea)
+    question.textContent = ''
+    if (askedQuestion.length < numberOfQuestion){
+        index = Math.floor(Math.random()*questionList.length)
+        while(askedQuestion.includes(index)){
+            index = Math.floor(Math.random()*questionList.length)
+        }
+        askedQuestion.push(index)
+        showQuestion(index)
+        showMultipleChoice(index)
+    }
+    else{
+        gameOver()
+    }
+}
+
+// render time left and trigger game over if time's up
 function showTimeRemaining(){
 
 }
 
-// get Input and process input functions
-function getPlayerDetail(){
-
+function showMenu(){
+    question.textContent= "Press the button below to start the game."
+    removeAllChild(btnArea)
+    startBtn = document.createElement("button")
+    startBtn.setAttribute('id','startBtn')
+    startBtn.textContent = "Start"
+    btnArea.appendChild(startBtn)
 }
 
-function checkAnswer(){
+
+
+// get Input and process input functions
+
+// render input form and process the input
+function getPlayerDetail(){
 
 }
 
@@ -78,6 +148,36 @@ function updateHighscore(){
 
 }
 
+// checkAnswer and display next question as well
+function checkButtonClicked(event){
+    var target = event.target
+    if(target.matches('.choice')){
+        if(target.textContent === answerList[index]){
+            score += 10
+        }
+        else{
+            timeLeft -= 10
+        }
+        pickAndDisplayQuestion()
+    }
+    if(target.matches('#startBtn')){
+        startGame()
+    }
+}
+
+function startGame(){
+    score = 0
+    timeLeft = 100
+    askedQuestion = []
+    // timer = setTimeInterval(showTimeRemaining, 1000)
+    pickAndDisplayQuestion()
+}
+
+function gameOver(){
+    alert('Game Over')
+}
+
 // assign event linstener to buttons
 
 scoreBtn.addEventListener('click', toggleHighscore)
+btnArea.addEventListener('click', checkButtonClicked)
