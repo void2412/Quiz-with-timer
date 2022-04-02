@@ -21,6 +21,7 @@ var scoreList = document.querySelector('#highscore')
 var scoreBtn = document.querySelector('#viewScore')
 
 var question = document.querySelector('#question')
+var feedback = document.querySelector('#questionFeedback')
 
 var btnArea = document.querySelector('#questionAnswer')
 var playerDetail = document.querySelector('#playerDetail')
@@ -34,6 +35,7 @@ var penaltyText = document.querySelector('#penalty')
 // initialization
 function init(){
     scoreList.setAttribute('style', 'display:none;')
+    feedback.setAttribute('style', 'display:none;')
     showMenu()
 }
 init()
@@ -45,7 +47,10 @@ function removeAllChild(element){
     }
 }
 
-
+function clearBoard(){
+    removeAllChild(btnArea)
+    question.textContent = ''
+}
 
 // rendering functions
 function toggleHighscore(){
@@ -101,8 +106,7 @@ function showMultipleChoice(index){
 }
 
 function pickAndDisplayQuestion(){
-    removeAllChild(btnArea)
-    question.textContent = ''
+    clearBoard()
     if (askedQuestion.length < numberOfQuestion){
         index = Math.floor(Math.random()*questionList.length)
         while(askedQuestion.includes(index)){
@@ -117,12 +121,14 @@ function pickAndDisplayQuestion(){
     }
 }
 
+
 // render time left and trigger game over if time's up
 function showTimeRemaining(){
 
 }
 
 function showMenu(){
+    clearBoard()
     question.textContent= "Press the button below to start the game."
     removeAllChild(btnArea)
     startBtn = document.createElement("button")
@@ -154,15 +160,28 @@ function checkButtonClicked(event){
     if(target.matches('.choice')){
         if(target.textContent === answerList[index]){
             score += 10
+            feedback.textContent = 'Correct'
         }
         else{
             timeLeft -= 10
+            feedback.textContent = 'Wrong'
         }
+        feedback.setAttribute('style', 'display:block;')
+        var feedbackTimer = 1
+        var showFeedback = setInterval(function(){
+            feedbackTimer--
+            if (feedbackTimer === 0){
+                clearInterval(showFeedback)
+                feedback.setAttribute('style','display:none;')
+                feedback.textContent = ''
+            }
+        }, 700)
         pickAndDisplayQuestion()
     }
     if(target.matches('#startBtn')){
         startGame()
     }
+
 }
 
 function startGame(){
@@ -173,8 +192,11 @@ function startGame(){
     pickAndDisplayQuestion()
 }
 
+
 function gameOver(){
-    alert('Game Over')
+    clearBoard()
+    question.textContent = "Game Over! Your score is " + score + "."
+    getPlayerDetail()
 }
 
 // assign event linstener to buttons
