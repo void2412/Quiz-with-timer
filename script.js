@@ -36,6 +36,8 @@ var penaltyText = document.querySelector('#penalty')
 function init(){
     scoreList.setAttribute('style', 'display:none;')
     feedback.setAttribute('style', 'display:none;')
+    timerArea.setAttribute('style', 'display:none;')
+    penaltyText.setAttribute('style','display: none;')
     showMenu()
 }
 init()
@@ -124,7 +126,16 @@ function pickAndDisplayQuestion(){
 
 // render time left and trigger game over if time's up
 function showTimeRemaining(){
-
+ 
+    if(timeLeft < 0){
+        
+        gameOver()
+    }
+    else{
+        timerText.textContent = timeLeft
+        timeLeft--
+    }
+        
 }
 
 function showMenu(){
@@ -137,6 +148,17 @@ function showMenu(){
     btnArea.appendChild(startBtn)
 }
 
+function displayPenalty(){
+    penaltyText.setAttribute('style','display: block;')
+    var penaltyTime = 1
+    var penaltyTimer = setInterval(function(){
+        penaltyTime--
+        if(penaltyTime === 0){
+            clearInterval(penaltyTimer)
+            penaltyText.setAttribute('style','display: none;')
+        }
+    }, 700)
+}
 
 
 // get Input and process input functions
@@ -191,6 +213,7 @@ function checkButtonClicked(event){
         }
         else{
             timeLeft -= 10
+            displayPenalty()
             feedback.textContent = 'Wrong'
         }
         // display feedback
@@ -210,6 +233,7 @@ function checkButtonClicked(event){
         pickAndDisplayQuestion()
     }
     if(target.matches('#startBtn')){
+        clearBoard()
         startGame()
     }
 
@@ -232,9 +256,8 @@ function playerDetailClicked(event){
             
             updateHighscore(playerObj)
         }
-        else{
-
-        }
+        removeAllChild(playerDetail)
+        showMenu()
     }
 }
 
@@ -242,12 +265,19 @@ function startGame(){
     score = 0
     timeLeft = 100
     askedQuestion = []
-    // timer = setTimeInterval(showTimeRemaining, 1000)
+    if(timerArea.getAttribute('style') === "display:none;"){
+        timerArea.setAttribute('style','display:block;')
+    }
+    
+    // call showTimeRemaining() for first time to display immediately, since setInterval got a delay before it was called
+    showTimeRemaining()
+    timer = setInterval(showTimeRemaining, 1000)
     pickAndDisplayQuestion()
 }
 
 
 function gameOver(){
+    clearInterval(timer)
     clearBoard()
     question.textContent = "Game Over! Your score is " + score + "."
     getPlayerDetail()
