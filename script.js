@@ -8,7 +8,7 @@ const choiceList =[
     ['4', '5', '6'],
     ['7', '8', '9']
 ]
-var numberOfQuestion = 3
+var numberOfQuestion = 0
 var score
 var timeLeft = 0
 var highscoreList = JSON.parse(localStorage.getItem('highscore'))||[]
@@ -19,9 +19,11 @@ var askedQuestion = []
 // item selected in HTML DOM
 var scoreList = document.querySelector('#highscore')
 var scoreBtn = document.querySelector('#viewScore')
+var scoreText = document.querySelector('#currentScore')
 
 var question = document.querySelector('#question')
 var feedback = document.querySelector('#questionFeedback')
+var feedbackArea = document.querySelector('#feedbackArea')
 
 var btnArea = document.querySelector('#questionAnswer')
 var playerDetail = document.querySelector('#playerDetail')
@@ -38,6 +40,7 @@ function init(){
     feedback.setAttribute('style', 'display:none;')
     timerArea.setAttribute('style', 'display:none;')
     penaltyText.setAttribute('style','display: none;')
+    feedbackArea.setAttribute('style', 'display: none;')
     showMenu()
 }
 init()
@@ -160,6 +163,9 @@ function displayPenalty(){
     }, 700)
 }
 
+function displayScore(){
+    scoreText.textContent = score
+}
 
 // get Input and process input functions
 
@@ -210,6 +216,7 @@ function checkButtonClicked(event){
         if(target.textContent === answerList[index]){
             score += 10
             feedback.textContent = 'Correct'
+            displayScore()
         }
         else{
             timeLeft -= 10
@@ -257,6 +264,7 @@ function playerDetailClicked(event){
             updateHighscore(playerObj)
         }
         removeAllChild(playerDetail)
+        timerArea.setAttribute('style','display:none;')
         showMenu()
     }
 }
@@ -264,12 +272,18 @@ function playerDetailClicked(event){
 function startGame(){
     score = 0
     timeLeft = 100
+    numberOfQuestion = 10
+    if (numberOfQuestion > questionList.length){
+        numberOfQuestion = questionList.length
+    }
     askedQuestion = []
     if(timerArea.getAttribute('style') === "display:none;"){
         timerArea.setAttribute('style','display:block;')
     }
-    
+    feedbackArea.setAttribute('style','display:block;')
+    scoreText.textContent = score
     // call showTimeRemaining() for first time to display immediately, since setInterval got a delay before it was called
+    displayScore()
     showTimeRemaining()
     timer = setInterval(showTimeRemaining, 1000)
     pickAndDisplayQuestion()
@@ -279,6 +293,7 @@ function startGame(){
 function gameOver(){
     clearInterval(timer)
     clearBoard()
+    feedbackArea.setAttribute('style','display:none;')
     question.textContent = "Game Over! Your score is " + score + "."
     getPlayerDetail()
 }
