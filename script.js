@@ -143,18 +143,45 @@ function showMenu(){
 
 // render input form and process the input
 function getPlayerDetail(){
-
+ var input = document.createElement('input')
+ input.setAttribute('type', 'text')
+ input.setAttribute('id', 'playerName')
+ input.setAttribute('placeholder', 'Enter your initial')
+ playerDetail.appendChild(input)
+ var submit = document.createElement('button')
+ submit.setAttribute('type', 'submit')
+ submit.setAttribute('id', 'submit')
+ submit.setAttribute('form', 'playerDetail')
+ submit.textContent = "Submit"
+ playerDetail.appendChild(submit)
 }
 
+// check if current record made it to top 10 - return -1 if not, return where it stands in top 10 if it made to top 10
 function checkHighscore(){
-
+    var localScore = score
+    highscoreList = JSON.parse(localStorage.getItem('highscore'))||[]
+    if (highscoreList.length < 10){
+        return true
+    }
+    for (var i=0; i<highscoreList.length; i++){
+        if(localScore >= highscoreList[i].score){
+            return true
+        }
+    }
+    return false
 }
 
-function updateHighscore(){
-
+function updateHighscore(playerObj){
+    highscoreList.push(playerObj)
+    highscoreList.sort(function(a,b){return b.score - a.score})
+    while (highscoreList.length > 10){
+        highscoreList.pop()
+    }
+    localStorage.setItem('highscore', JSON.stringify(highscoreList))
 }
 
-// checkAnswer and display next question as well
+
+// check button clicked and process according to that button
 function checkButtonClicked(event){
     var target = event.target
     if(target.matches('.choice')){
@@ -188,6 +215,29 @@ function checkButtonClicked(event){
 
 }
 
+function playerDetailClicked(event){
+    var target = event.target
+    if (target.matches('#submit')){
+        event.preventDefault()
+        if(checkHighscore()){
+            var playerName = document.querySelector('#playerName')
+            if (playerName.value == ""){
+                playerName.setAttribute("style","box-shadow: 0 0 3px red;")
+                return
+            }
+            var playerObj = {
+                name: playerName.value,
+                score: score
+            }
+            
+            updateHighscore(playerObj)
+        }
+        else{
+
+        }
+    }
+}
+
 function startGame(){
     score = 0
     timeLeft = 100
@@ -207,3 +257,4 @@ function gameOver(){
 
 scoreBtn.addEventListener('click', toggleHighscore)
 btnArea.addEventListener('click', checkButtonClicked)
+playerDetail.addEventListener('click', playerDetailClicked)
