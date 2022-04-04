@@ -20,6 +20,8 @@ var askedQuestion = []
 var scoreList = document.querySelector('#highscore')
 var scoreBtn = document.querySelector('#viewScore')
 var scoreText = document.querySelector('#currentScore')
+var scoreArea = document.querySelector('#scoreArea')
+var highscoreArea = document.querySelector('#highscoreArea')
 
 var question = document.querySelector('#question')
 var feedback = document.querySelector('#questionFeedback')
@@ -37,10 +39,11 @@ var penaltyText = document.querySelector('#penalty')
 // initialization
 function init(){
     scoreList.setAttribute('style', 'display:none;')
-    feedback.setAttribute('style', 'display:none;')
-    timerArea.setAttribute('style', 'display:none;')
-    penaltyText.setAttribute('style','display: none;')
+    feedback.textContent = ''
+    timerText.textContent = ''
+    penaltyText.textContent = ''
     feedbackArea.setAttribute('style', 'display: none;')
+    scoreArea.setAttribute('style', 'display: none !important;')
     showMenu()
 }
 init()
@@ -58,24 +61,50 @@ function clearBoard(){
 }
 
 // rendering functions
+function displayHighScore(){
+    scoreList.setAttribute('style', 'display: block;')
+    scoreBtn.textContent = "Hide HighScore"
+    highscoreToggle = true
+    highscoreList = []
+    highscoreList = JSON.parse(localStorage.getItem('highscore'))||[]
+    for (var i = 0; i < highscoreList.length; i++){
+        var liEl = document.createElement('li')
+        var liText = highscoreList[i].name + " - " + highscoreList[i].score + " point(s)."
+        liEl.textContent = liText
+        scoreList.appendChild(liEl)
+    }
+    clearBtn = document.createElement('button')
+    clearBtn.textContent = "Clear HighScore"
+    clearBtn.setAttribute('id','clearHSBtn')
+    clearBtn.setAttribute('class','my-3')
+    
+}
+
+function hideHighScore(){
+    scoreList.setAttribute('style', 'display: none;')
+    scoreBtn.textContent = "Show HighScore"
+    highscoreToggle = false
+    removeAllChild(scoreList)
+    
+}
+
 function toggleHighscore(){
     if (!highscoreToggle){
-        scoreList.setAttribute('style', 'display: block;')
-        scoreBtn.textContent = "Hide HighScore"
-        highscoreToggle = true
-        highscoreList = []
-        highscoreList = JSON.parse(localStorage.getItem('highscore'))||[]
-        for (var i = 0; i < highscoreList.length; i++){
-            var liEl = document.createElement('li')
-            var liText = highscoreList[i].name + " - " + highscoreList[i].score + " point(s)."
-            liEl.textContent = liText
-            scoreList.appendChild(liEl)
-        }
+        displayHighScore()
+        highscoreArea.appendChild(clearBtn)
     }
     else{
-        scoreList.setAttribute('style', 'display: none;')
-        scoreBtn.textContent = "Show HighScore"
-        highscoreToggle = false
+        hideHighScore()
+        highscoreArea.children[2].remove()
+    }
+    
+}
+
+function highscoreAreaClicked(event){
+    var target =event.target
+    if (target.matches('#clearHSBtn')){
+        highscoreList=[]
+        localStorage.setItem('highscore', JSON.stringify(highscoreList))
         removeAllChild(scoreList)
     }
     
@@ -104,7 +133,7 @@ function showMultipleChoice(index){
     for (var i = 0; i < choices.length; i++)
     {
         buttonElement = document.createElement('button')
-        buttonElement.setAttribute('class', 'choice')
+        buttonElement.setAttribute('class', 'choice row')
         buttonElement.textContent = choices[i]
         btnArea.appendChild(buttonElement)
     }
@@ -135,7 +164,7 @@ function showTimeRemaining(){
         gameOver()
     }
     else{
-        timerText.textContent = timeLeft
+        timerText.textContent = 'Time: ' + timeLeft
         timeLeft--
     }
         
@@ -152,18 +181,19 @@ function showMenu(){
 }
 
 function displayPenalty(){
-    penaltyText.setAttribute('style','display: block;')
+    penaltyText.textContent="-10s"
     var penaltyTime = 1
     var penaltyTimer = setInterval(function(){
         penaltyTime--
         if(penaltyTime === 0){
             clearInterval(penaltyTimer)
-            penaltyText.setAttribute('style','display: none;')
+            penaltyText.textContent = ''
         }
     }, 700)
 }
 
 function displayScore(){
+    scoreArea.setAttribute('style', 'display: flex !important;')
     scoreText.textContent = score
 }
 
@@ -224,14 +254,13 @@ function checkButtonClicked(event){
             feedback.textContent = 'Wrong'
         }
         // display feedback
-        feedback.setAttribute('style', 'display:block;')
         // timer to hide feedback
         var feedbackTimer = 1
         var showFeedback = setInterval(function(){
             feedbackTimer--
             if (feedbackTimer === 0){
                 clearInterval(showFeedback)
-                feedback.setAttribute('style','display:none;')
+                
                 feedback.textContent = ''
             }
         }, 700)
@@ -264,8 +293,17 @@ function playerDetailClicked(event){
             updateHighscore(playerObj)
         }
         removeAllChild(playerDetail)
-        timerArea.setAttribute('style','display:none;')
+        timerText.textContent =''
+        scoreArea.setAttribute('style', 'display: none !important;')
         showMenu()
+        if(highscoreToggle){
+            removeAllChild(scoreList)
+            displayHighScore()
+        }
+        else{
+            toggleHighscore()
+        }
+        
     }
 }
 
@@ -303,3 +341,4 @@ function gameOver(){
 scoreBtn.addEventListener('click', toggleHighscore)
 btnArea.addEventListener('click', checkButtonClicked)
 playerDetail.addEventListener('click', playerDetailClicked)
+highscoreArea.addEventListener('click', highscoreAreaClicked)

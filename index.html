@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz with timer</title>
 </head>
-<body>
-    <div id = "highscoreArea">
+<body class="jumbotron row">
+    <div id = "highscoreArea" class="col-3 my-4">
         <button id="viewScore">Show HighScore</button>
         <ol id="highscore">
             
@@ -15,35 +15,38 @@
        
     </div>
 
-    <div id= "mainGameArea">
-        <div id="questionArea">
-            <p id="question"></p>
+    <div id= "mainGameArea" class="col-6 container-fluid text-center my-3" style="min-height: 300px;">
+        <div id="questionArea" class="container-fluid my-4">
+            <h3 id="question"></h3>
         </div>
 
-        <div id="inputArea">
-            <div id="questionAnswer">
+        <div id="inputArea" class="container-fluid text-center my-4">
+            <div id="questionAnswer" class="my-3">
                 
             </div>
 
-            <form id="playerDetail">
+            <form id="playerDetail" class="my-3">
                 
             </form>
         </div>
-        <div id="feedbackArea">
-            <p id="questionFeedback"></p>
-            <p>Current Score: <span id="currentScore"></span></p>
+        <div id="feedbackArea" class="container-fluid my-3">
+            <b><p id="questionFeedback"></p></b>
+            
         </div>
     </div>
 
-    <div id="timerArea">
-        <p id="penalty">-10s</p>
-        <p>Time: <span id="timer"></span></p>
+    <div id="timerArea" class="col-3 d-flex my-3">
+        <p class="col-6 text-end m-3"><b id="penalty"></b></p>
+        <p class="col-6 m-3" id="timer"></p>
 
     </div>
+
+    <footer id="scoreArea" class="col-12 d-flex justify-content-center align-items-end align-self-end">
+        <p class="align-bottom">Current Score: <span id="currentScore"></span></p>
+    </footer>
     
-    <!-- <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script> -->
-    <!-- <link rel="stylesheet" href="./css/bootstrap.css"> -->
-    <!-- <script src="./js/bootstrap.js"></script> -->
+
+    <link rel="stylesheet" href="./css/bootstrap.css">
     <script src="script.js"></script>
 </body>
 </html>
