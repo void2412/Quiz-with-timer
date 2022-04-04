@@ -1,12 +1,62 @@
 // initial variable and constant
-const questionList =['What is DOM', 'HTML stand for', 'css stand for', 'js stand for', 'What is jQuery']
-const answerList =['Document Object Model', 'Hypertext Markup Language', 'Casading stylesheet','javascript', 'javascript library']
+const questionList =['Which of the following oceans is not bordered by Australia?',
+'Along with the kangaroo, which animal can be found only in Australia?',
+'Which kind of landscape accounts for more than 40 per cent of Australia?',
+'Which is the capital city of Australia?',
+'When do people celebrate Australia Day, which is the anniversary of the start of the nation?',
+'When an Aussie says: “I am knackered”, what does it mean?',
+'Which natural structure located in central Australia is called “Uluru” by indigenous people?',
+'What does the name “Australia” mean in Latin?',
+'Which two cities in Australia used to host the Olympic Games?',
+'Which event happened to Harold Holt, the Prime Minister of Australia, in 1967?',
+'Anzac Day is a national day of remembrance in New Zealand and Australia to commemorate soldiers in which war?',
+'The famous TV soap opera “Home and Away” is filmed on which famous beach?',
+'How many states are there in Australia?',
+'The badge of the state Tasmania features which animal?',
+'The flag of which country is featured in the national flag of Australia?',
+'Which of the following is an Australian rock band?',
+'Before the name Australia was used, what did people call the country?',
+'Which is the largest airline carrier in Australia in terms of fleet size?',
+'The city of lights is the nickname of which Australian city?']
+const answerList =['The Atlantic Ocean',
+'Koala',
+'Desert',
+'Canberra',
+'26 January',
+'He is tired',
+'Ayers Rock',
+'Southern Land',
+'Sydney and Melbourne',
+'He disappeared at sea',
+'World War I',
+'Palm Beach',
+'6',
+'A red lion',
+'The United Kingdom',
+'AC/DC',
+'New Holland',
+'QANTAS',
+'Perth']
 const choiceList =[
-    ['x', 'y', 'z'],
-    ['a', 'b', 'c'],
-    ['1', '2', '3'],
-    ['4', '5', '6'],
-    ['7', '8', '9']
+    ['The Pacific Ocean', 'The Indian Ocean'],
+    ['Lynx', 'Fjord horse'],
+    ['Forest', 'Mountain'],
+    ['Sydney', 'Melbourne'],
+    ['8 April', '17 August'],
+    ['He is angry', 'He is excited'],
+    ['Fraser Island', 'The Pinnacles'],
+    ['Secret Land', 'Free Land', 'Big Land'],
+    ['Canberra and Sydney','Melbourne and Canberra'],
+    ['He died in a car crash','He was assassinated'],
+    ['World War II','Vietnam War'],
+    ['Bondi Beach', 'Maroubra Beach'],
+    ['4','8'],
+    ['A piping shrike','A black swan'],
+    ['Ireland', 'Holland'],
+    ['Scorpions','Kent'],
+    ['New Ireland', 'New England'],
+    ['Virgin Australia','Jetstar'],
+    ['Darwin','Brisbane']
 ]
 var numberOfQuestion = 0
 var score
@@ -133,7 +183,7 @@ function showMultipleChoice(index){
     for (var i = 0; i < choices.length; i++)
     {
         buttonElement = document.createElement('button')
-        buttonElement.setAttribute('class', 'choice row')
+        buttonElement.setAttribute('class', 'choice row my-2')
         buttonElement.textContent = choices[i]
         btnArea.appendChild(buttonElement)
     }
