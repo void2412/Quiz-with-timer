@@ -16,7 +16,7 @@ Chi Hieu Nguyen
 
 ## Badges
 ![badmath](https://img.shields.io/badge/html-%20-green)
-![badmath](https://img.shields.io/badge/css-%20-green)
+![badmath](https://img.shields.io/badge/bootstrap-%20-green)
 ![badmath](https://img.shields.io/badge/javascript-%20-green)
 
 ## Features
@@ -29,3 +29,4 @@ Chi Hieu Nguyen
 6. HighScore will be updated if user choose to save the score and it is in the top 10
 7. Highscore section have a clear button which clear the highscore board
 8. HighScore use separate section which allow user to see the highscore while playing (to get motivation)
+9. HighScore is shown with the highest score on top

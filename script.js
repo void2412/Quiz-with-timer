@@ -1,4 +1,4 @@
-// initial variable and constant
+// initialization constant
 const questionList =['Which of the following oceans is not bordered by Australia?',
 'Along with the kangaroo, which animal can be found only in Australia?',
 'Which kind of landscape accounts for more than 40 per cent of Australia?',
@@ -58,6 +58,8 @@ const choiceList =[
     ['Virgin Australia','Jetstar'],
     ['Darwin','Brisbane']
 ]
+
+// initialization variable
 var numberOfQuestion = 0
 var score
 var timeLeft = 0
@@ -110,7 +112,7 @@ function clearBoard(){
     question.textContent = ''
 }
 
-// rendering functions
+// render HighScore list
 function displayHighScore(){
     scoreList.setAttribute('style', 'display: block;')
     scoreBtn.textContent = "Hide HighScore"
@@ -130,6 +132,7 @@ function displayHighScore(){
     
 }
 
+// remove HighScore list from screen
 function hideHighScore(){
     scoreList.setAttribute('style', 'display: none;')
     scoreBtn.textContent = "Show HighScore"
@@ -138,6 +141,7 @@ function hideHighScore(){
     
 }
 
+// handle Show/Hide HighScore button click
 function toggleHighscore(){
     if (!highscoreToggle){
         displayHighScore()
@@ -150,6 +154,7 @@ function toggleHighscore(){
     
 }
 
+// handle clear Highscore button click
 function highscoreAreaClicked(event){
     var target =event.target
     if (target.matches('#clearHSBtn')){
@@ -160,11 +165,13 @@ function highscoreAreaClicked(event){
     
 }
 
+// display the question
 function showQuestion(index){
     removeAllChild(btnArea)
     question.textContent = questionList[index]
 }
 
+// randomize the choice for no copycat
 function shuffleChoice(array){
     var currentIndex = array.length
     while(currentIndex > 0){
@@ -176,6 +183,7 @@ function shuffleChoice(array){
     return array
 }
 
+// display multiple choice buttons
 function showMultipleChoice(index){
     var choices = choiceList[index].slice(0, choiceList[index].length)
     choices.push(answerList[index])
@@ -189,10 +197,15 @@ function showMultipleChoice(index){
     }
 }
 
+// get random question and display it
 function pickAndDisplayQuestion(){
     clearBoard()
+
+    
     if (askedQuestion.length < numberOfQuestion){
         index = Math.floor(Math.random()*questionList.length)
+
+        // roll index until find a question that has not been asked
         while(askedQuestion.includes(index)){
             index = Math.floor(Math.random()*questionList.length)
         }
@@ -220,6 +233,7 @@ function showTimeRemaining(){
         
 }
 
+// display main menu for re-play
 function showMenu(){
     clearBoard()
     question.textContent= "Press the button below to start the game."
@@ -247,7 +261,7 @@ function displayScore(){
     scoreText.textContent = score
 }
 
-// get Input and process input functions
+
 
 // render input form and process the input
 function getPlayerDetail(){
@@ -264,7 +278,7 @@ function getPlayerDetail(){
  playerDetail.appendChild(submit)
 }
 
-// check if current record made it to top 10 - return -1 if not, return where it stands in top 10 if it made to top 10
+// check if current record made it to top 10 - return true is got into top 10, false if not
 function checkHighscore(){
     var localScore = score
     highscoreList = JSON.parse(localStorage.getItem('highscore'))||[]
@@ -279,6 +293,7 @@ function checkHighscore(){
     return false
 }
 
+// added score to highscore, sort it to the appopriate position
 function updateHighscore(playerObj){
     highscoreList.push(playerObj)
     highscoreList.sort(function(a,b){return b.score - a.score})
@@ -303,7 +318,6 @@ function checkButtonClicked(event){
             displayPenalty()
             feedback.textContent = 'Wrong'
         }
-        // display feedback
         // timer to hide feedback
         var feedbackTimer = 1
         var showFeedback = setInterval(function(){
@@ -325,6 +339,7 @@ function checkButtonClicked(event){
 
 }
 
+// function for submiting the score
 function playerDetailClicked(event){
     var target = event.target
     if (target.matches('#submit')){
@@ -346,6 +361,8 @@ function playerDetailClicked(event){
         timerText.textContent =''
         scoreArea.setAttribute('style', 'display: none !important;')
         showMenu()
+
+        // re-rendering Highscore if Highscore list is changed
         if(highscoreToggle){
             removeAllChild(scoreList)
             displayHighScore()
@@ -357,6 +374,7 @@ function playerDetailClicked(event){
     }
 }
 
+// start the game
 function startGame(){
     score = 0
     timeLeft = 100
@@ -377,7 +395,7 @@ function startGame(){
     pickAndDisplayQuestion()
 }
 
-
+// end the game
 function gameOver(){
     clearInterval(timer)
     clearBoard()
