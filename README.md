@@ -5,7 +5,7 @@ This project is created as a way of entertainment for children. It helps them le
 
 
 ## Usage
-Press the start button and enjoy the game :)
+Press the start button and enjoy the game with 10 questions each game.
 
 
 
